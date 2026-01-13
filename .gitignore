@@ -10,3 +10,4 @@ testing*
 nf-test
 .nf-test*
 test.xml
+/testdata_results
