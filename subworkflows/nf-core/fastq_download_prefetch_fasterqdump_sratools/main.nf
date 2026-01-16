@@ -1,6 +1,7 @@
 include { CUSTOM_SRATOOLSNCBISETTINGS } from '../../../modules/nf-core/custom/sratoolsncbisettings/main'
 include { SRATOOLS_PREFETCH           } from '../../../modules/nf-core/sratools/prefetch/main'
 include { SRATOOLS_FASTERQDUMP        } from '../../../modules/nf-core/sratools/fasterqdump/main'
+include { PIGZ_COMPRESS               } from '../../../modules/nf-core/pigz/compress/main'
 
 //
 // Download FASTQ sequencing reads from the NCBI's Sequence Read Archive (SRA).
@@ -33,7 +34,10 @@ workflow FASTQ_DOWNLOAD_PREFETCH_FASTERQDUMP_SRATOOLS {
     SRATOOLS_FASTERQDUMP ( SRATOOLS_PREFETCH.out.sra, ch_ncbi_settings, ch_dbgap_key )
     ch_versions = ch_versions.mix(SRATOOLS_FASTERQDUMP.out.versions.first())
 
+    PIGZ_COMPRESS ( SRATOOLS_FASTERQDUMP.out.reads.transpose() )
+    ch_versions = ch_versions.mix(PIGZ_COMPRESS.out.versions.first())
+
     emit:
-    reads    = SRATOOLS_FASTERQDUMP.out.reads // channel: [ val(meta), [ reads ] ]
-    versions = ch_versions                    // channel: [ versions.yml ]
+    reads    = PIGZ_COMPRESS.out.archive.groupTuple().map { meta, files -> [ meta, files.sort { it.name } ] } // channel: [ val(meta), [ reads ] ]
+    versions = ch_versions                                                                                    // channel: [ versions.yml ]
 }

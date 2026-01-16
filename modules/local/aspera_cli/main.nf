@@ -4,8 +4,8 @@ process ASPERA_CLI {
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/aspera-cli:4.14.0--hdfd78af_1' :
-        'biocontainers/aspera-cli:4.14.0--hdfd78af_1' }"
+        'https://depot.galaxyproject.org/singularity/aspera-cli:4.20.0--hdfd78af_0' :
+        'quay.io/biocontainers/aspera-cli:4.14.0--hdfd78af_1' }"
 
     input:
     tuple val(meta), val(fastq)
@@ -27,7 +27,7 @@ process ASPERA_CLI {
             $args \\
             -i \$CONDA_PREFIX/etc/aspera/aspera_bypass_dsa.pem \\
             ${user}@${fastq[0]} \\
-            ${meta.id}.fastq.gz
+            ${meta.id}.fastq.gz || true
 
         echo "${meta.md5_1}  ${meta.id}.fastq.gz" > ${meta.id}.fastq.gz.md5
         md5sum -c ${meta.id}.fastq.gz.md5
