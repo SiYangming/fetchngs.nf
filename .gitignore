@@ -12,3 +12,4 @@ nf-test
 test.xml
 /testdata_results
 /logs
+/test_stub
