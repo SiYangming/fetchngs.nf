@@ -36,6 +36,7 @@ start() {
   fi
   ensure_env
   mkdir -p "$LOG_DIR"
+  # 修改为自己需要后台执行的命令
   nohup nextflow run main.nf -profile docker -c conf/test_local.config --outdir testdata_results/test -resume >> "$LOG_FILE" 2>&1 &
   echo $! > "$PID_FILE"
   echo "started: $(cat "$PID_FILE")"
