@@ -30,4 +30,15 @@ process SRA_IDS_TO_RUNINFO {
         python: \$(python --version | sed 's/Python //g')
     END_VERSIONS
     """
+
+    stub:
+    """
+    echo "run_accession\texperiment_accession\tlibrary_layout\tfastq_ftp\tfastq_md5" > ${id}.runinfo.tsv
+    echo "${id}\texperiment_accession\tSINGLE\tftp://example.com/file.fastq.gz\tmd5sum" >> ${id}.runinfo.tsv
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        python: \$(python --version | sed 's/Python //g')
+    END_VERSIONS
+    """
 }

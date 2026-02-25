@@ -24,4 +24,15 @@ process SRA_RUNINFO_TO_FTP {
         python: \$(python --version | sed 's/Python //g')
     END_VERSIONS
     """
+
+    stub:
+    """
+    echo "id\trun_accession\texperiment_accession\tlibrary_layout\tfastq_ftp\tfastq_md5\tfastq_1\tfastq_2\tmd5_1\tmd5_2\tsingle_end" > ${runinfo.toString().tokenize(".")[0]}.runinfo_ftp.tsv
+    echo "DRX024467_DRR026872\tDRR026872\tDRX024467\tSINGLE\tftp://example.com/file.fastq.gz\tmd5sum\tftp://example.com/file.fastq.gz\t\tmd5sum\t\ttrue" >> ${runinfo.toString().tokenize(".")[0]}.runinfo_ftp.tsv
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        python: \$(python --version | sed 's/Python //g')
+    END_VERSIONS
+    """
 }

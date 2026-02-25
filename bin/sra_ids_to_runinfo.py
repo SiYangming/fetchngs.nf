@@ -2,7 +2,6 @@
 
 
 import argparse
-import cgi
 import csv
 import gzip
 import logging
@@ -10,6 +9,7 @@ import os
 import re
 import sys
 import zlib
+from email.message import Message
 from pathlib import Path
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlencode
@@ -157,8 +157,9 @@ class Response:
     def text(self, encoding=None):
         """Return the response's body as a decoded string."""
         if encoding is None:
-            _, params = cgi.parse_header(self._response.getheader("Content-Type", ""))
-            encoding = params.get("charset", "utf-8")
+            m = Message()
+            m['content-type'] = self._response.getheader("Content-Type", "")
+            encoding = m.get_param("charset", "utf-8")
         return self.body.decode(encoding)
 
 

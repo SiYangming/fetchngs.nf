@@ -3,6 +3,14 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.13.0dev
+
+### Modules
+- Added `kingfisher` modules (get, extract, annotate) for alternative SRA download and handling.
+
+### Enhancements
+- Added support for `params.download_method = 'kingfisher'` in SRA workflow.
+
 ## [[1.12.0](https://github.com/nf-core/fetchngs/releases/tag/1.12.0)] - 2024-02-29
 
 ### :warning: Major enhancements

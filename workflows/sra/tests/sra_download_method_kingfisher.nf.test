@@ -1,0 +1,30 @@
+nextflow_workflow {
+
+    name "Test workflow: sra/main.nf"
+    script "../main.nf"
+    workflow "SRA"
+    tag "SRA_DOWNLOAD_METHOD_KINGFISHER"
+    options "-stub"
+
+    test("Parameters: --download_method kingfisher") {
+        when {
+            workflow {
+                """
+                input[0] = Channel.from("DRX024467")
+                """
+            }
+            params {
+                download_method = 'kingfisher'
+                sample_mapping_fields = 'run_accession,experiment_accession'
+            }
+        }
+        then {
+            assert workflow.success
+            // assert workflow.trace.tasks().any { it.process.contains("KINGFISHER_GET") }
+            with(workflow.out.samplesheet) {
+                assert path(get(0)).exists()
+                assert path(get(0)).readLines().any { it.contains("DRR026872") }
+            }
+        }
+    }
+}

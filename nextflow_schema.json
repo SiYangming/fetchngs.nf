@@ -51,9 +51,9 @@
                     "type": "string",
                     "default": "ftp",
                     "fa_icon": "fas fa-download",
-                    "enum": ["aspera", "ftp", "sratools"],
-                    "description": "Method to download FastQ files. Available options are 'aspera', 'ftp' or 'sratools'. Default is 'ftp'.",
-                    "help_text": "FTP and Aspera CLI download FastQ files directly from the ENA FTP whereas sratools uses sra-tools to download *.sra files and convert to FastQ."
+                    "enum": ["aspera", "ftp", "sratools", "kingfisher"],
+                    "description": "Method to download FastQ files. Available options are 'aspera', 'ftp', 'sratools' or 'kingfisher'. Default is 'ftp'.",
+                    "help_text": "FTP and Aspera CLI download FastQ files directly from the ENA FTP whereas sratools uses sra-tools to download *.sra files and convert to FastQ. Kingfisher uses the Kingfisher tool to download data."
                 },
                 "skip_fastq_download": {
                     "type": "boolean",

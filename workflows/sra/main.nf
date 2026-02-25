@@ -9,6 +9,7 @@ include { SRA_FASTQ_FTP           } from '../../modules/local/sra_fastq_ftp'
 include { SRA_IDS_TO_RUNINFO      } from '../../modules/local/sra_ids_to_runinfo'
 include { SRA_RUNINFO_TO_FTP      } from '../../modules/local/sra_runinfo_to_ftp'
 include { ASPERA_CLI              } from '../../modules/local/aspera_cli'
+include { KINGFISHER_GET          } from '../../modules/nf-core/kingfisher/get/main'
 include { SRA_TO_SAMPLESHEET      } from '../../modules/local/sra_to_samplesheet'
 include { softwareVersionsToYAML  } from '../../subworkflows/nf-core/utils_nfcore_pipeline'
 
@@ -79,12 +80,17 @@ workflow SRA {
                     if ((!meta.fastq_aspera && !meta.fastq_1) || params.download_method == 'sratools') {
                         download_method = 'sratools'
                     }
+                    if (params.download_method == 'kingfisher') {
+                        download_method = 'kingfisher'
+                    }
 
                     aspera: download_method == 'aspera'
                         return [ meta, meta.fastq_aspera.tokenize(';').take(2) ]
                     ftp: download_method == 'ftp'
                         return [ meta, [ meta.fastq_1, meta.fastq_2 ] ]
                     sratools: download_method == 'sratools'
+                        return [ meta, meta.run_accession ]
+                    kingfisher: download_method == 'kingfisher'
                         return [ meta, meta.run_accession ]
             }
             .set { ch_sra_reads }
@@ -115,12 +121,21 @@ workflow SRA {
         )
         ch_versions = ch_versions.mix(ASPERA_CLI.out.versions.first())
 
+        //
+        // MODULE: Download sequencing reads using Kingfisher
+        //
+        KINGFISHER_GET (
+            ch_sra_reads.kingfisher
+        )
+        ch_versions = ch_versions.mix(KINGFISHER_GET.out.versions.first())
+
         // Isolate FASTQ channel which will be added to emit block
         SRA_FASTQ_FTP
             .out
             .fastq
             .mix(FASTQ_DOWNLOAD_PREFETCH_FASTERQDUMP_SRATOOLS.out.reads)
             .mix(ASPERA_CLI.out.fastq)
+            .mix(KINGFISHER_GET.out.fastq)
             .map {
                 meta, fastq ->
                     def reads = fastq instanceof List ? fastq.flatten() : [ fastq ]
