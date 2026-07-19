@@ -1,7 +1,7 @@
-name: kingfisher
+name: fastq-dl
 channels:
   - conda-forge
   - bioconda
   - defaults
 dependencies:
-  - bioconda::kingfisher=0.4.1
+  - bioconda::fastq-dl=4.0.1

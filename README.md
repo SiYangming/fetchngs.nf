@@ -70,6 +70,8 @@ Via a single file of ids, provided one-per-line (see [example input file](https:
      - Fetch in parallel via `wget` and perform `md5sum` check (`--download_method ftp`; default).
      - Fetch in parallel via `aspera-cli` and perform `md5sum` check. Use `--download_method aspera` to force this behaviour.
    - Otherwise use [`sra-tools`](https://github.com/ncbi/sra-tools) to download `.sra` files and convert them to FastQ. Use `--download_method sratools` to force this behaviour.
+   - Use [`kingfisher`](https://github.com/wwood/kingfisher) to download data via ena-ascp/ena-ftp/aws-http/prefetch. Use `--download_method kingfisher` to force this behaviour.
+   - Use [fastq-dl](https://github.com/rpetit3/fastq-dl) to fetch FASTQ from ENA or SRA. Use `--download_method fastqdl` to force this behaviour.
 4. Collate id metadata and paths to FastQ files in a single samplesheet
 
 ## Pipeline output

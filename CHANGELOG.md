@@ -3,13 +3,16 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## v1.13.0dev
+## v1.14.0
 
 ### Modules
 - Added `kingfisher` modules (get, extract, annotate) for alternative SRA download and handling.
+- Added `fastqdl/download` module for alternative SRA/ENA download via fastq-dl.
 
 ### Enhancements
 - Added support for `params.download_method = 'kingfisher'` in SRA workflow.
+- Added support for `params.download_method = 'fastqdl'` in SRA workflow.
+- Bumped pipeline version to `1.14.0` to include `kingfisher` and `fastqdl` download methods.
 
 ## [[1.12.0](https://github.com/nf-core/fetchngs/releases/tag/1.12.0)] - 2024-02-29
 

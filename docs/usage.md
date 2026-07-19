@@ -74,6 +74,11 @@ See [issue #260](https://github.com/nf-core/fetchngs/issues/260) for more detail
 
 If the appropriate download links are available, the pipeline uses FTP by default to download FastQ files by setting the `--download_method ftp` parameter. If you are having issues and prefer to use sra-tools or Aspera instead, you can set the [`--download_method`](https://nf-co.re/fetchngs/parameters#download_method) parameter to `--download_method sratools` or `--download_method aspera`, respectively.
 
+Additional download methods available:
+
+- `--download_method kingfisher`: uses [Kingfisher](https://github.com/wwood/kingfisher) to fetch data via ena-ascp / ena-ftp / aws-http / prefetch.
+- `--download_method fastqdl`: uses [fastq-dl](https://github.com/rpetit3/fastq-dl) to fetch FASTQ files from ENA or SRA given an accession (Study / Experiment / Run accession).
+
 ### Downloading dbGAP data with JWT
 
 As of v1.10.0, the SRA Toolkit used in this pipeline can be configured to access protected data from dbGAP using a [JWT cart file](https://www.ncbi.nlm.nih.gov/sra/docs/sra-dbGAP-cloud-download/) on a supported cloud computing environment (Amazon Web Services or Google Cloud Platform). The JWT cart file can be specified with `--dbgap_key /path/to/cart.jwt`.

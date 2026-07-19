@@ -1,10 +1,10 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "https://raw.githubusercontent.com/nf-core/fetchngs/master/nextflow_schema.json",
     "title": "nf-core/fetchngs pipeline parameters",
     "description": "Pipeline to fetch metadata and raw FastQ files from public databases",
     "type": "object",
-    "definitions": {
+    "$defs": {
         "input_output_options": {
             "title": "Input/output options",
             "type": "object",
@@ -51,9 +51,9 @@
                     "type": "string",
                     "default": "ftp",
                     "fa_icon": "fas fa-download",
-                    "enum": ["aspera", "ftp", "sratools", "kingfisher"],
-                    "description": "Method to download FastQ files. Available options are 'aspera', 'ftp', 'sratools' or 'kingfisher'. Default is 'ftp'.",
-                    "help_text": "FTP and Aspera CLI download FastQ files directly from the ENA FTP whereas sratools uses sra-tools to download *.sra files and convert to FastQ. Kingfisher uses the Kingfisher tool to download data."
+                    "enum": ["aspera", "ftp", "sratools", "kingfisher", "fastqdl"],
+                    "description": "Method to download FastQ files. Available options are 'aspera', 'ftp', 'sratools', 'kingfisher' or 'fastqdl'. Default is 'ftp'.",
+                    "help_text": "FTP and Aspera CLI download FastQ files directly from the ENA FTP whereas sratools uses sra-tools to download *.sra files and convert to FastQ. Kingfisher uses the Kingfisher tool to download data. fastqdl uses fastq-dl to download from ENA or SRA."
                 },
                 "skip_fastq_download": {
                     "type": "boolean",
@@ -247,6 +247,11 @@
                     "description": "Validation of parameters in lenient more.",
                     "hidden": true,
                     "help_text": "Allows string values that are parseable as numbers or booleans. For further information see [JSONSchema docs](https://github.com/everit-org/json-schema#lenient-mode)."
+                },
+                "trace_report_suffix": {
+                    "type": "string",
+                    "hidden": true,
+                    "description": "Suffix to add to trace/report/timeline/dag files."
                 }
             }
         },
@@ -269,19 +274,19 @@
     },
     "allOf": [
         {
-            "$ref": "#/definitions/input_output_options"
+            "$ref": "#/$defs/input_output_options"
         },
         {
-            "$ref": "#/definitions/institutional_config_options"
+            "$ref": "#/$defs/institutional_config_options"
         },
         {
-            "$ref": "#/definitions/max_job_request_options"
+            "$ref": "#/$defs/max_job_request_options"
         },
         {
-            "$ref": "#/definitions/generic_options"
+            "$ref": "#/$defs/generic_options"
         },
         {
-            "$ref": "#/definitions/deprecated_options"
+            "$ref": "#/$defs/deprecated_options"
         }
     ]
 }
