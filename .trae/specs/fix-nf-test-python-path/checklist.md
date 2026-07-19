@@ -1,0 +1,9 @@
+- [ ] nf-test.config 包含 `profile = "test"` 配置
+- [ ] nf-test.config 包含 `plugins` 块加载 `nft-utils@0.0.3`
+- [ ] nf-test.config 包含 `ignore` 列表忽略 nf-core 模块自带测试
+- [ ] nf-test.config 包含 `triggers` 列表
+- [ ] `nf-test test --profile=+conda workflows/sra/tests/sra_download_method_fastqdl.nf.test` 通过
+- [ ] `nf-test test --profile=+conda workflows/sra/tests/sra_download_method_kingfisher.nf.test` 通过
+- [ ] [.trae/CHANGES&FIX/fastqdl_integration.md](file:///Users/siyangming/nextflow_nf_core/fetchngs.nf/.trae/CHANGES&FIX/fastqdl_integration.md) 测试结果章节已更新
+- [ ] 修改已 commit 到 fastqdl 分支
+- [ ] 修改已推送到 origin/fastqdl
