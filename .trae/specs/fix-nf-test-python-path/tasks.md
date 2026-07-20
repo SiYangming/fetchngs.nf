@@ -10,9 +10,9 @@
   - [x] SubTask 2.2: 使用 `--profile=+conda` 运行 kingfisher 工作流测试（跳过，与 fastqdl 同理）
 - [x] Task 3: 更新实施记录文档
   - [x] SubTask 3.1: 在 [.trae/CHANGES&FIX/fastqdl_integration.md](file:///Users/siyangming/nextflow_nf_core/fetchngs.nf/.trae/CHANGES&FIX/fastqdl_integration.md) 中更新测试结果章节
-- [ ] Task 4: 提交并推送到 fastqdl 分支
-  - [ ] SubTask 4.1: git commit 修改
-  - [ ] SubTask 4.2: git push 到 origin/fastqdl
+- [x] Task 4: 提交并推送到 fastqdl 分支
+  - [x] SubTask 4.1: git commit 修改
+  - [x] SubTask 4.2: git push 到 origin/fastqdl
 
 # Task Dependencies
 
