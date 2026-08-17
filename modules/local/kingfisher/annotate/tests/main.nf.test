@@ -1,13 +1,13 @@
 nextflow_process {
 
-    name "Test Process KINGFISHER_GET"
+    name "Test Process KINGFISHER_ANNOTATE"
     script "../main.nf"
-    process "KINGFISHER_GET"
+    process "KINGFISHER_ANNOTATE"
 
     tag "modules"
     tag "modules_nfcore"
     tag "kingfisher"
-    tag "kingfisher/get"
+    tag "kingfisher/annotate"
 
     test("sra_ids_from_csv") {
         options "-stub"
@@ -15,7 +15,7 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = Channel.fromPath('/Users/siyangming/nextflow_nf_core/bio.nf/modules/kingfisher/sra_ids_test.csv')
+                input[0] = Channel.fromPath("${projectDir}/modules/local/kingfisher/sra_ids_test.csv")
                             .splitCsv(header: false)
                             .map { row ->
                                 def id = row[0]
@@ -28,7 +28,7 @@ nextflow_process {
         then {
             assertAll (
                 { assert process.success },
-                { assert snapshot(process.out.fastq, process.out.versions).match() }
+                { assert snapshot(process.out.metadata, process.out.versions).match() }
             )
         }
     }

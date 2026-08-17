@@ -9,8 +9,8 @@ include { SRA_FASTQ_FTP           } from '../../modules/local/sra_fastq_ftp'
 include { SRA_IDS_TO_RUNINFO      } from '../../modules/local/sra_ids_to_runinfo'
 include { SRA_RUNINFO_TO_FTP      } from '../../modules/local/sra_runinfo_to_ftp'
 include { ASPERA_CLI              } from '../../modules/local/aspera_cli'
-include { KINGFISHER_GET          } from '../../modules/nf-core/kingfisher/get/main'
-include { FASTQDL_DOWNLOAD        } from '../../modules/nf-core/fastqdl/download/main'
+include { KINGFISHER_GET          } from '../../modules/local/kingfisher/get/main'
+include { FASTQDL_DOWNLOAD        } from '../../modules/local/fastqdl/download/main'
 include { SRA_TO_SAMPLESHEET      } from '../../modules/local/sra_to_samplesheet'
 include { softwareVersionsToYAML  } from '../../subworkflows/nf-core/utils_nfcore_pipeline'
 
@@ -34,7 +34,7 @@ workflow SRA {
     ids // channel: [ ids ]
 
     main:
-    ch_versions = Channel.empty()
+    ch_versions = channel.empty()
 
     //
     // MODULE: Get SRA run information for public database ids
@@ -178,25 +178,25 @@ workflow SRA {
     SRA_TO_SAMPLESHEET
         .out
         .samplesheet
-        .map { it[1] }
-        .collectFile(name:'tmp_samplesheet.csv', newLine: true, keepHeader: true, sort: { it.baseName })
-        .map { it.text.tokenize('\n').join('\n') }
+        .map { pair -> pair[1] }
+        .collectFile(name:'tmp_samplesheet.csv', newLine: true, keepHeader: true, sort: { file -> file.baseName })
+        .map { file -> file.text.tokenize('\n').join('\n') }
         .collectFile(name:'samplesheet.csv', storeDir: "${params.outdir}/samplesheet")
         .set { ch_samplesheet }
 
     SRA_TO_SAMPLESHEET
         .out
         .mappings
-        .map { it[1] }
-        .collectFile(name:'tmp_id_mappings.csv', newLine: true, keepHeader: true, sort: { it.baseName })
-        .map { it.text.tokenize('\n').join('\n') }
+        .map { pair -> pair[1] }
+        .collectFile(name:'tmp_id_mappings.csv', newLine: true, keepHeader: true, sort: { file -> file.baseName })
+        .map { file -> file.text.tokenize('\n').join('\n') }
         .collectFile(name:'id_mappings.csv', storeDir: "${params.outdir}/samplesheet")
         .set { ch_mappings }
 
     //
     // MODULE: Create a MutiQC config file with sample name mappings
     //
-    ch_sample_mappings_yml = Channel.empty()
+    ch_sample_mappings_yml = channel.empty()
     if (params.sample_mapping_fields) {
         MULTIQC_MAPPINGS_CONFIG (
             ch_mappings

@@ -13,7 +13,7 @@ workflow FASTQ_DOWNLOAD_PREFETCH_FASTERQDUMP_SRATOOLS {
 
     main:
 
-    ch_versions = Channel.empty()
+    ch_versions = channel.empty()
 
     //
     // Detect existing NCBI user settings or create new ones.
@@ -38,6 +38,6 @@ workflow FASTQ_DOWNLOAD_PREFETCH_FASTERQDUMP_SRATOOLS {
     ch_versions = ch_versions.mix(PIGZ_COMPRESS.out.versions.first())
 
     emit:
-    reads    = PIGZ_COMPRESS.out.archive.groupTuple().map { meta, files -> [ meta, files.sort { it.name } ] } // channel: [ val(meta), [ reads ] ]
+    reads    = PIGZ_COMPRESS.out.archive.groupTuple().map { meta, files -> [ meta, files.sort { file -> file.name } ] } // channel: [ val(meta), [ reads ] ]
     versions = ch_versions                                                                                    // channel: [ versions.yml ]
 }

@@ -36,7 +36,6 @@ process FASTQDL_DOWNLOAD {
     """
 
     stub:
-    def args = task.ext.args ?: ''
     prefix = task.ext.prefix ?: "${meta.id}"
     """
     echo "" | gzip > ${accession}_1.fastq.gz

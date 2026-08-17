@@ -14,11 +14,11 @@ workflow UTILS_NFCORE_PIPELINE {
     nextflow_cli_args
 
     main:
-    valid_config = checkConfigProvided()
+    checkConfigProvided()
     checkProfileProvided(nextflow_cli_args)
 
     emit:
-    valid_config
+    checkConfigProvided()
 }
 
 /*
@@ -115,9 +115,9 @@ def workflowVersionToYAML() {
 def softwareVersionsToYAML(ch_versions) {
     return ch_versions
                 .unique()
-                .map { processVersionsFromYAML(it) }
+                .map { version -> processVersionsFromYAML(version) }
                 .unique()
-                .mix(Channel.of(workflowVersionToYAML()))
+                .mix(channel.of(workflowVersionToYAML()))
 }
 
 //
@@ -262,9 +262,9 @@ def attachMultiqcReport(multiqc_report) {
                 mqc_report = mqc_report[0]
             }
         }
-    } catch (all) {
+    } catch (Exception msg) {
         if (multiqc_report) {
-            log.warn "[$workflow.manifest.name] Could not attach MultiQC report to summary email"
+            log.warn "[$workflow.manifest.name] Could not attach MultiQC report to summary email: ${msg.toString()}"
         }
     }
     return mqc_report
@@ -350,7 +350,8 @@ def completionEmail(summary_params, email, email_on_fail, plaintext_email, outdi
             sendmail_tf.withWriter { w -> w << sendmail_html }
             [ 'sendmail', '-t' ].execute() << sendmail_html
             log.info "-${colors.purple}[$workflow.manifest.name]${colors.green} Sent summary e-mail to $email_address (sendmail)-"
-        } catch (all) {
+        } catch (Exception msg) {
+            log.debug(msg.toString())
             // Catch failures and try with plaintext
             def mail_cmd = [ 'mail', '-s', subject, '--content-type=text/html', email_address ]
             mail_cmd.execute() << email_html

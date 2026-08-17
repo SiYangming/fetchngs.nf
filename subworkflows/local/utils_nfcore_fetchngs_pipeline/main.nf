@@ -82,15 +82,12 @@ workflow PIPELINE_INITIALISATION {
     }
 
     // Read in ids from --input file
-    Channel
+    emit:
+    channel
         .from(ch_input)
         .splitCsv(header:false, sep:'', strip:true)
-        .map { it[0] }
+        .map { line -> line[0] }
         .unique()
-        .set { ch_ids }
-
-    emit:
-    ids = ch_ids
 }
 
 /*
@@ -169,7 +166,7 @@ def isSraId(input) {
 def sraCheckENAMetadataFields(ena_metadata_fields) {
     // Check minimal ENA fields are provided to download FastQ files
     def valid_ena_metadata_fields = ['run_accession', 'experiment_accession', 'library_layout', 'fastq_ftp', 'fastq_md5']
-    def actual_ena_metadata_fields = ena_metadata_fields ? ena_metadata_fields.split(',').collect{ it.trim().toLowerCase() } : valid_ena_metadata_fields
+    def actual_ena_metadata_fields = ena_metadata_fields ? ena_metadata_fields.split(',').collect{ field -> field.trim().toLowerCase() } : valid_ena_metadata_fields
     if (!actual_ena_metadata_fields.containsAll(valid_ena_metadata_fields)) {
         error("Invalid option: '${ena_metadata_fields}'. Minimally required fields for '--ena_metadata_fields': '${valid_ena_metadata_fields.join(',')}'")
     }

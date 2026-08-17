@@ -3,6 +3,21 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.14.1
+
+### Enhancements
+
+- Consolidated all custom configs (`fetchngs_custom_config_template.config`, `fetchngs_unified_config.config`, `SRP189094.config`, `PRJNA974167.config`) into a single `conf/server.config` registered as `server` profile; `input`/`outdir` are now passed via CLI (`-profile server,docker --input samplesheets/xxx/SRR_Acc_List.csv --outdir <OUTDIR>`).
+- Added `samplesheets/SRP189094/` (SRR_Acc_List, SraRunTable) and `samplesheets/PRJNA974167/` (SRR_Acc_List, SraRunTable) input lists, resolved via `${projectDir}`.
+
+### Fixed
+
+- Resolved all `nextflow lint` warnings (35 → 0): replaced deprecated `Channel` factory with `channel`, explicit closure parameters (removed implicit `it`), `shell:` blocks converted to `script:` (with `${var}` template syntax and bash variable escaping in `retry_with_backoff.sh` / `detect_ncbi_settings.sh`), unused variables removed, single-emit names omitted, and catch parameters used/renamed.
+
+### Removed
+
+- Removed `conf/SRP189094.config`, `conf/PRJNA974167.config`, `conf/fetchngs_custom_config_template.config`, `conf/fetchngs_unified_config.config` — consolidated into `conf/server.config`.
+
 ## v1.14.0
 
 ### Modules

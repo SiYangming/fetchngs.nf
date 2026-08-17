@@ -15,7 +15,7 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = Channel.fromPath('/Users/siyangming/nextflow_nf_core/bio.nf/modules/fastqdl/sra_ids_test.csv')
+                input[0] = Channel.fromPath("${projectDir}/modules/local/fastqdl/sra_ids_test.csv")
                             .splitCsv(header: false)
                             .map { row ->
                                 def id = row[0]

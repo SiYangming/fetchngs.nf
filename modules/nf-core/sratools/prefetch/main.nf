@@ -19,17 +19,16 @@ process SRATOOLS_PREFETCH {
     when:
     task.ext.when == null || task.ext.when
 
-    shell:
+    script:
     args = task.ext.args ?: ''
     args2 = task.ext.args2 ?: '5 1 100'  // <num retries> <base delay in seconds> <max delay in seconds>
-    if (certificate) {
-        if (certificate.toString().endsWith('.jwt')) {
-            args += " --perm ${certificate}"
-        }
-        else if (certificate.toString().endsWith('.ngc')) {
-            args += " --ngc ${certificate}"
-        }
-    }
-
+    def cert_arg = certificate ?
+        (certificate.name.endsWith('.jwt') ? "--perm ${certificate}" :
+        certificate.name.endsWith('.ngc') ? "--ngc ${certificate}" : '') : ''
+    final_args = "${args} ${cert_arg}".trim()
+    """
+    echo "${args2}"
+    echo "${final_args}"
+    """
     template 'retry_with_backoff.sh'
 }
