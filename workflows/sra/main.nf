@@ -10,7 +10,7 @@ include { SRA_IDS_TO_RUNINFO      } from '../../modules/local/sra_ids_to_runinfo
 include { SRA_RUNINFO_TO_FTP      } from '../../modules/local/sra_runinfo_to_ftp'
 include { ASPERA_CLI              } from '../../modules/local/aspera_cli'
 include { KINGFISHER_GET          } from '../../modules/local/kingfisher/get/main'
-include { FASTQDL_DOWNLOAD        } from '../../modules/local/fastqdl/download/main'
+include { FASTQDL                 } from '../../modules/nf-core/fastqdl/main'
 include { SRA_TO_SAMPLESHEET      } from '../../modules/local/sra_to_samplesheet'
 include { softwareVersionsToYAML  } from '../../subworkflows/nf-core/utils_nfcore_pipeline'
 
@@ -138,10 +138,10 @@ workflow SRA {
         //
         // MODULE: Download sequencing reads using fastq-dl
         //
-        FASTQDL_DOWNLOAD (
+        FASTQDL (
             ch_sra_reads.fastqdl
         )
-        ch_versions = ch_versions.mix(FASTQDL_DOWNLOAD.out.versions.first())
+        ch_versions = ch_versions.mix(FASTQDL.out.versions_fastqdl)
 
         // Isolate FASTQ channel which will be added to emit block
         SRA_FASTQ_FTP
@@ -150,7 +150,7 @@ workflow SRA {
             .mix(FASTQ_DOWNLOAD_PREFETCH_FASTERQDUMP_SRATOOLS.out.reads)
             .mix(ASPERA_CLI.out.fastq)
             .mix(KINGFISHER_GET.out.fastq)
-            .mix(FASTQDL_DOWNLOAD.out.fastq)
+            .mix(FASTQDL.out.fastq)
             .map {
                 meta, fastq ->
                     def reads = fastq instanceof List ? fastq.flatten() : [ fastq ]
@@ -206,9 +206,17 @@ workflow SRA {
     }
 
     //
+    // Normalise software versions to YAML text so the channel contains a single type
+    // (nf-core topic-based versions arrive as [ process, tool, version ]; legacy modules emit versions.yml files)
+    //
+    ch_versions_yml = ch_versions.map { version ->
+        version instanceof List ? "${version[0]}:\n  ${version[1]}: ${version[2]}" : version.text
+    }
+
+    //
     // Collate and save software versions
     //
-    softwareVersionsToYAML(ch_versions)
+    softwareVersionsToYAML(ch_versions_yml)
         .collectFile(storeDir: "${params.outdir}/pipeline_info", name: 'nf_core_fetchngs_software_mqc_versions.yml', sort: true, newLine: true)
 
     emit:
@@ -216,7 +224,7 @@ workflow SRA {
     mappings        = ch_mappings
     sample_mappings = ch_sample_mappings_yml
     sra_metadata    = ch_sra_metadata
-    versions        = ch_versions.unique()
+    versions        = ch_versions_yml.unique()
 }
 
 /*

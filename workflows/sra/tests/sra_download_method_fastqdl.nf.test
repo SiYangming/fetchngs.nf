@@ -20,7 +20,7 @@ nextflow_workflow {
         }
         then {
             assert workflow.success
-            // assert workflow.trace.tasks().any { it.process.contains("FASTQDL_DOWNLOAD") }
+            // assert workflow.trace.tasks().any { it.process.contains("FASTQDL") }
             with(workflow.out.samplesheet) {
                 assert path(get(0)).exists()
                 assert path(get(0)).readLines().any { it.contains("DRR026872") }

@@ -3,6 +3,15 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.14.2
+
+### Modules
+
+- Replaced custom `modules/local/fastqdl/download` with the official nf-core `fastqdl` module (fastq-dl v3.0.1, vendored from nf-core/modules at `e62a1ec`). Process renamed `FASTQDL_DOWNLOAD` → `FASTQDL`, output `run_info`/`run_mergers`/`versions` → `runinfo`/`runmergers`/`versions_fastqdl` (topic-based versions).
+- `softwareVersionsToYAML` now supports both legacy `versions.yml` files and the new nf-core topic-based versions format (`[ process, tool, version ]`).
+- Software versions channel normalised to YAML text (single element type) so nf-test can sort workflow outputs containing mixed legacy / topic-based version entries.
+- fastqdl process config moved from the deleted module's `nextflow.config` into `workflows/sra/nextflow.config`; `modules.json` updated.
+
 ## v1.14.1
 
 ### Enhancements

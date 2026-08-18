@@ -1,7 +1,0 @@
-name: fastq-dl
-channels:
-  - conda-forge
-  - bioconda
-  - defaults
-dependencies:
-  - bioconda::fastq-dl=4.0.1

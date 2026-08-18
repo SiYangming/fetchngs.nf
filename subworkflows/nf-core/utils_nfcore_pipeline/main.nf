@@ -115,7 +115,14 @@ def workflowVersionToYAML() {
 def softwareVersionsToYAML(ch_versions) {
     return ch_versions
                 .unique()
-                .map { version -> processVersionsFromYAML(version) }
+                .map { version ->
+                    // New-style versions channel: [ process, tool, version ] (topic: versions)
+                    if (version instanceof List) {
+                        return "${version[0]}:\n  ${version[1]}: ${version[2]}"
+                    }
+                    // Legacy versions channel: versions.yml file
+                    processVersionsFromYAML(version)
+                }
                 .unique()
                 .mix(channel.of(workflowVersionToYAML()))
 }
